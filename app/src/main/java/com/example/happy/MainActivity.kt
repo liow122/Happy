@@ -1,5 +1,8 @@
 package com.example.happy
 
+import android.app.Activity
+import android.content.Intent
+import android.content.SyncRequest
 import android.os.Bundle
 import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
@@ -15,7 +18,7 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
-
+    private lateinit var feelingViewModel : FeelingViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -26,7 +29,7 @@ class MainActivity : AppCompatActivity() {
         recycleListView.adapter = adapter
         recycleListView.layoutManager = LinearLayoutManager(this)
 
-        val feelingViewModel = ViewModelProvider(this)
+        feelingViewModel = ViewModelProvider(this)
             .get(FeelingViewModel::class.java)
 
         feelingViewModel.allFeelings.observe(
@@ -43,10 +46,35 @@ class MainActivity : AppCompatActivity() {
             }
         )
         fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
+            val intent = Intent(this,
+                AddActivity::class.java)
+
+            startActivityForResult(intent,REQUEST_CODE)
         }
     }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if(requestCode == REQUEST_CODE) {
+            if (resultCode == Activity.RESULT_OK) {
+                val _mode = data?.getIntExtra(
+                    AddActivity.EXTRA_MODE, 0
+                )
+                val _remark = data?.getStringExtra(
+                    AddActivity.EXTRA_REMARK
+                )
+                val feeling = Feeling(
+                    id = 0,
+                    mode = _mode!!,
+                    remarks = _remark!!
+                )
+                feelingViewModel.insertFeeling(feeling)
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data)
+    }
+
+
+
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -63,4 +91,9 @@ class MainActivity : AppCompatActivity() {
             else -> super.onOptionsItemSelected(item)
         }
     }
+
+    companion object{
+        const val REQUEST_CODE = 1
+    }
 }
+

@@ -4,6 +4,7 @@
     <string name="Mode">Mode</string>
     <string name="Remark">Remark</string>
     <string name="Date">Date</string>
-    <string name="title_activity_add">AddActivity</string>
+    <string name="title_activity_add">Add Activity</string>
+    <string name="Save">Save</string>
 
 </resources>

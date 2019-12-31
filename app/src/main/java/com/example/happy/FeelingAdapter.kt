@@ -35,13 +35,14 @@ class FeelingAdapter internal constructor(context: Context)
         val feelingRec = feelings.get(position)
 
         holder.textViewMode.text = feelingRec.mode.toString()
-        holder.textViewRemark.text = feelingRec.remark.toString()
+        holder.textViewRemark.text = feelingRec.remarks
         holder.textViewDate.text = SimpleDateFormat("yyyy.MM.dd.HH:MM")
             .format(feelingRec.created_at)
     }
 
     internal fun setFeeling(feeling: List<Feeling>){
-        this.feelings = feelings
+        this.feelings = feeling
+        notifyDataSetChanged()
     }
 }
 
